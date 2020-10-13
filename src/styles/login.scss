@@ -1,0 +1,51 @@
+/** @format */
+
+.login-form {
+	background-color: #fff;
+	width: 300px;
+	height: 1000;
+	padding: 20px;
+}
+
+.login {
+	padding-left: 35%;
+	padding-top: 10%;
+	padding-bottom: 16%;
+}
+
+.login-input {
+	width: 100%;
+	border: none;
+	border-bottom: 1px solid #eee;
+	padding: 10px 0;
+	color: #868e96;
+	font-weight: 300;
+	margin-top: 20px;
+	height: 40px;
+}
+.login-form-header {
+	width: 100%;
+}
+.login-title {
+	color: #33b35a;
+	padding-left: 5%;
+}
+.login-sub-title {
+	color: #ccc;
+	padding-left: 30%;
+}
+.login-form-bottom {
+	margin-left: 35%;
+	color: #fff;
+	border: none;
+	background-color: #33b35a;
+	width: 70px;
+	height: 35px;
+}
+.login-form-forgot {
+	padding-left: 27%;
+}
+.login-form-spinner {
+	color: #33b35a;
+	margin-left: 40%;
+}
