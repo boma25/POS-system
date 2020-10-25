@@ -57,7 +57,7 @@ const items=[
     }
     return(
         <div>
-            <Navbar/>
+            <Navbar name="Test"/>
            <div className="container">
             <Row className="cashier-form">
                 <Col>

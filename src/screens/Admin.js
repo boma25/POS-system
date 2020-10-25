@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import {Row, Col, Button, Container} from 'react-bootstrap'
+import {Row, Col, Container} from 'react-bootstrap'
 import Navbar from '../componets/Navbar'
 import { 
     FaRegSquare, 
@@ -9,16 +9,17 @@ import {
 } from "react-icons/fa"
 
 import Inventory from "../componets/Inventory"
+import Employee from "../componets/Employee"
 
 
-const Admin = ()=>{
-    const [page, setPage]=useState("dashboard")
+const Admin = (Props)=>{
+    const [page, setPage]=useState("stock")
     return (
     <div>
-        <Navbar/>
-        <Row className="admin-main">
+        <Navbar name={"Admin"}/>
+        <Row className="aside-main">
             <Col xs={2}>
-            <div className="aside-main bg-dark navbar-dark">
+            <div className="aside-inner bg-dark navbar-dark">
                 <ul>
                     <li className="nav-link aside-list"> 
                         <FaRegSquare className="aside-btn"/>
@@ -36,22 +37,18 @@ const Admin = ()=>{
                     <FaRegListAlt className="aside-btn"/>
                         <a href="#" onClick={()=>setPage("report")} className="aside-btn">Report</a>
                     </li>
-                    <li className="nav-link aside-list">
-                        <FaRegUser className="aside-btn"/>
-                        <a href="#" onClick={()=>setPage("customer")} className="aside-btn">Customer</a>
-                    </li>
                 </ul>
             </div>
             </Col>
-            <Col>
+            <Col className="inner-space" >
             <Container>
-            {page =="dashboard"?(
+            {page ==="dashboard"?(
                 <div>Dashboard</div>
-            ):page=="employee"?(
-            <div>employee</div>
-            ):page=="stock"?(
+            ):page==="employee"?(
+            <Employee/>
+            ):page==="stock"?(
                 <Inventory/>
-            ):page=="report"?(
+            ):page==="report"?(
                 <div>report</div>
             ):(<div>customer</div>)}
             </Container>

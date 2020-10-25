@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useState } from "react"
-import { Redirect, useParams } from "react-router-dom"
+import { Redirect } from "react-router-dom"
 //import { Button } from "react-bootstrap"
 
 const Login = () => {
@@ -11,12 +11,29 @@ const Login = () => {
 	const [isLoggedIn, setIsLoggedIng] = useState(false)
 	const [to, setTO] = useState("cashier")
 	const handleSubmit = (evt) => {
-		setIsLoading(true)
-		evt.preventDefault()
-		setIsLoggedIng(true)
+		try{
+			setIsLoading(true)
+			evt.preventDefault()
+			if(username==="" ||  password===""){
+				
+				alert("incorrect username or password")
+			}else if(username==="admin" || username==="Admin" ){
+				setTO("admin")
+				setIsLoggedIng(true)
+				alert("logging successfull")
+			}else{
+				setIsLoggedIng(true)
+				alert("logging successfull")
+			}
+			setIsLoading(false)
+
+		}catch(e){
+			alert(e)
+		}
+		
 	}
 	return isLoggedIn ? (
-		<Redirect to={to} />
+		<Redirect to={to} name="free" />
 	) : (
 		<div className="container">
 			<div className="login">

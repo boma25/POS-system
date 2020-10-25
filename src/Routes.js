@@ -9,16 +9,13 @@ import {
   import Cashier from './screens/Cashier'
   
 
-  export default function MainRouter() {
+  export default function MainRouter(Props) {
     return (
       <Router>
           <Switch>
             <Route path={"/login"}>
               <Login />
             </Route>
-            {/* {<Route path={"/"}>
-              <Login />
-            </Route>} */}
             <Route path="/admin">
               <Admin />
             </Route>
