@@ -46,7 +46,9 @@ const Inventory =()=>{
     }
     const handleDelete = async  (evt) => {
 		try{
-			evt.preventDefault()
+            evt.preventDefault()
+            const response = await delete_stock(name)
+            alert(response)
             get_inventory()
 
 		}catch(e){

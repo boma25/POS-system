@@ -25,8 +25,8 @@ export const edit_stock = async (name,price,new_amount)=>{
     return response.data
 
 }
-export const delete_stock = async (id)=>{
-    let response = await axios.post(`${BASE_URL}/inventory/edit/${id}`)
+export const delete_stock = async (name)=>{
+    let response = await axios.delete(`${BASE_URL}/inventory/delete/item`,{name})
     return response.data
 
 }
