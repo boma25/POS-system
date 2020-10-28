@@ -47,8 +47,13 @@ const Inventory =()=>{
     const handleDelete = async  (evt) => {
 		try{
             evt.preventDefault()
-            const response = await delete_stock(name)
-            alert(response)
+            let i
+            for (i=0;i<data.length;i++){
+                if(data[i].name === name){
+                    const response = await delete_stock(data[i]._id) 
+                    alert(response)
+                }
+            }
             get_inventory()
 
 		}catch(e){
@@ -110,6 +115,7 @@ const Inventory =()=>{
                         <form className="add-employee-form" onSubmit={handleOld}>
                             <p className="inventory-header">Name</p>
                             <select className="form-control" onChange={(e)=> setName(e.target.value)}>
+                                    <option>select</option>
                                 {
                                     data.map((item,index)=>(
                                         <option key={index}>{item.name}</option>
@@ -137,6 +143,7 @@ const Inventory =()=>{
                          <form className="add-employee-form" onSubmit={handleDelete}>
                             <p className="inventory-header">Name</p>
                             <select className="form-control" onChange={(e)=> setName(e.target.value)}>
+                                    <option>select</option>
                                 {
                                     data.map((item,index)=>(
                                         <option key={index}>{item.name}</option>
