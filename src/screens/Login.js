@@ -3,29 +3,42 @@
 import React, { useState } from "react"
 import { Redirect } from "react-router-dom"
 //import { Button } from "react-bootstrap"
+import {login} from "../Api/endpoint"
+import {useStoreContext} from "../util/store"
 
 const Login = () => {
+	const {
+		isLoggedIn,
+		setIsLoggedIn,
+		setName
+	}=useStoreContext()
+
 	const [username, setUsername] = useState("")
 	const [password, setPassword] = useState("")
 	const [isLoading, setIsLoading] = useState(false)
-	const [isLoggedIn, setIsLoggedIng] = useState(false)
-	const [to, setTO] = useState("cashier")
-	const handleSubmit = (evt) => {
+	const [to, setTO] = useState("")
+	const handleSubmit = async  (evt) => {
 		try{
-			setIsLoading(true)
 			evt.preventDefault()
 			if(username==="" ||  password===""){
 				
 				alert("incorrect username or password")
-			}else if(username==="admin" || username==="Admin" ){
-				setTO("admin")
-				setIsLoggedIng(true)
-				alert("logging successfull")
 			}else{
-				setIsLoggedIng(true)
-				alert("logging successfull")
+				setIsLoading(true)
+				const user = await login(username,password)
+				alert(user)
+				if(user==="login successful"){
+					setIsLoggedIn(true)
+					if(username==="Admin"){
+						setTO("admin")
+					}else(
+						setTO("cashier")
+					)
+				}
+				setName(username)
+				setIsLoading(false)
 			}
-			setIsLoading(false)
+			
 
 		}catch(e){
 			alert(e)
@@ -33,7 +46,7 @@ const Login = () => {
 		
 	}
 	return isLoggedIn ? (
-		<Redirect to={to} name="free" />
+		<Redirect to={to} />
 	) : (
 		<div className="container">
 			<div className="login">

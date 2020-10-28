@@ -13,8 +13,8 @@ import {
     return (
       <Router>
           <Switch>
-            <Route path={"/login"}>
-              <Login />
+            <Route path={"/"} exact>
+              <Login/>
             </Route>
             <Route path="/admin">
               <Admin />

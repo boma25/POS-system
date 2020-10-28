@@ -1,50 +1,59 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Row, Col, ProgressBar, Button} from 'react-bootstrap'
+import {get_stock, add_to_stock, edit_stock, delete_stock} from "../Api/endpoint"
 
 
-const data=[
-    {
-        name:"Yam",
-        price:5000,
-        availability:700
-    },
-    {
-        name:"Beans",
-        price:10000,
-        availability:500
-    },
-    {
-        name:"gari",
-        price:6000,
-        availability:400
-    },
-    {
-        name:"tissue",
-        price:7000,
-        availability:200
-    },
-    {
-        name:"paste",
-        price:1000,
-        availability:800
-    },
-    {
-        name:"toot pick",
-        price:2000,
-        availability:100
-    },
-    {
-        name:"towel",
-        price:3000,
-        availability:900
-    },
-    
-]
+
 
 
 const Inventory =()=>{
     const [addProduct, setAddProduct]= useState(false)
     const [productType, setProductType] = useState("")
+    const [data, setData]=useState([""])
+    const [name, setName] = useState("")
+    const [price, setPrice] = useState(0)
+    const [quantity, setQuantity] = useState(0)
+    const [deleteProduct, setDeleteProduct]=useState(false)
+    const get_inventory = async ()=>{
+        setData(await get_stock())
+    }
+    useEffect(()=>{
+        get_inventory()
+    },[])
+    const handleNew = async  (evt) => {
+		try{
+			evt.preventDefault()
+			const response = await add_to_stock(name,price,quantity)
+            alert(response)
+            get_inventory()
+
+		}catch(e){
+			alert(e)
+		}
+		
+    }
+    const handleOld = async  (evt) => {
+		try{
+			evt.preventDefault()
+			const response = await edit_stock(name,price,quantity)
+            alert(response)
+            get_inventory()
+
+		}catch(e){
+			alert(e)
+		}
+		
+    }
+    const handleDelete = async  (evt) => {
+		try{
+			evt.preventDefault()
+            get_inventory()
+
+		}catch(e){
+			alert(e)
+		}
+		
+	}
     return(
         <div>
             <Row>
@@ -60,12 +69,12 @@ const Inventory =()=>{
                         <Col xs={3}className="inventory-items">{item.name}</Col>
                         <Col xs={3} className="inventory-items">{item.price}</Col>
                         <Col xs={3} className="inventory-items">{
-                        item.availability<250?(
-                        <ProgressBar variant="danger" now={item.availability} max={1000} />
-                        ):item.availability<450?(
-                        <ProgressBar variant="warning" now={item.availability} max={1000} />
+                        item.amount_in_stock<250?(
+                        <ProgressBar variant="danger" now={item.amount_in_stock} max={1000} />
+                        ):item.amount_in_stock<450?(
+                        <ProgressBar variant="warning" now={item.amount_in_stock} max={1000} />
                         ):(
-                        <ProgressBar now={item.availability} max={1000} />
+                        <ProgressBar now={item.amount_in_stock} max={1000} />
                         )}</Col>
                     </Row>
                 ))
@@ -73,20 +82,20 @@ const Inventory =()=>{
             {
                 addProduct?(
                 <Row className="add-stock">
-                    <Col xs={3}><Button onclick={()=>setProductType("new")}>New Product</Button></Col>
-                    <Col><Button onclick={()=>setProductType("old")}>Top up</Button></Col>
+                    <Col xs={3}><Button onClick={()=>setProductType("new")}>New Product</Button></Col>
+                    <Col><Button onClick={()=>setProductType("old")}>Edit product</Button></Col>
                 </Row>):(<div/>)
             }
             {
                 productType === "new"?(
                     <div>
-                        <form className="add-employee-form">
+                        <form className="add-employee-form" onSubmit={handleNew}>
                             <p className="inventory-header">Name</p>
-                            <input type="text" className="add-employee-form-input"/>
+                            <input type="text" className="add-employee-form-input" onChange={(e) => setName(e.target.value)}/>
                             <p className="inventory-header">Price</p>
-                            <input type="text" className="add-employee-form-input"/>
-                            <p className="inventory-header">Amount</p>
-                            <input type="text" className="add-employee-form-input"/>
+                            <input type="text" className="add-employee-form-input" onChange={(e) => setPrice(e.target.value)}/>
+                            <p className="inventory-header">Amount in stock</p>
+                            <input type="text" className="add-employee-form-input" onChange={(e) => setQuantity(e.target.value)}/>
                             <input
                                 type="submit"
                                 value="Add"
@@ -95,13 +104,55 @@ const Inventory =()=>{
                         </form>
                     </div>
                 ):productType==="old"?(
-                    <div>old</div>
+                    <div>
+                        <form className="add-employee-form" onSubmit={handleOld}>
+                            <p className="inventory-header">Name</p>
+                            <select className="form-control" onChange={(e)=> setName(e.target.value)}>
+                                {
+                                    data.map((item,index)=>(
+                                        <option key={index}>{item.name}</option>
+                                    ))
+                                }
+                            </select>
+                                <p className="inventory-header">Price</p>
+                                <input type="text" className="add-employee-form-input" onChange={(e) => setPrice(e.target.value)}/>
+                                <p className="inventory-header">Amount in stock</p>
+                                <input type="text" className="add-employee-form-input" onChange={(e) => setQuantity(e.target.value)}/>
+                                <input
+                                    type="submit"
+                                    value="Edit"
+                                    className="add-employee-form-button"
+                                    />
+                        </form>
+                    </div>
                 ):(
                     <div/>
                 )
             }
+             {
+                deleteProduct?(
+                    <div>
+                         <form className="add-employee-form" onSubmit={handleDelete}>
+                            <p className="inventory-header">Name</p>
+                            <select className="form-control" onChange={(e)=> setName(e.target.value)}>
+                                {
+                                    data.map((item,index)=>(
+                                        <option key={index}>{item.name}</option>
+                                    ))
+                                }
+                            </select>
+                            <input
+                                    type="submit"
+                                    value="Delete"
+                                    className="add-employee-form-button"
+                                    />
+                        </form>
+                    </div>
+                ):(<div/>)
+            }
             <Row>
-            <Col xs={3}><Button className="add-stock" onClick={()=>setAddProduct(true)}>Add product</Button></Col>
+            <Col xs={3}><Button className="add-stock" onClick={()=>[setAddProduct(!addProduct),setProductType(""),setDeleteProduct(false)]}>Toggle Add product</Button></Col>
+            <Col xs={3}><Button className="add-stock" onClick={()=>[setDeleteProduct(!deleteProduct),setProductType(""),setAddProduct(false) ]}>Delete a product</Button></Col>
             </Row>
         </div>
     )

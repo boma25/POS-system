@@ -7,16 +7,21 @@ import {
     FaRegListAlt, 
     FaWarehouse 
 } from "react-icons/fa"
+import {useStoreContext} from "../util/store"
+import { Redirect } from "react-router-dom"
 
 import Inventory from "../componets/Inventory"
 import Employee from "../componets/Employee"
 
-
 const Admin = (Props)=>{
     const [page, setPage]=useState("stock")
-    return (
+    const {
+        isLoggedIn
+    }=useStoreContext()
+    
+    return isLoggedIn ? (
     <div>
-        <Navbar name={"Admin"}/>
+        <Navbar/>
         <Row className="aside-main">
             <Col xs={2}>
             <div className="aside-inner bg-dark navbar-dark">
@@ -55,7 +60,10 @@ const Admin = (Props)=>{
             </Col>
         </Row>
     </div>
-    )
+    ):(<div>
+        {alert("you must logged in")}
+        <Redirect to={"/"} />
+    </div>)
 }
 
 export default Admin

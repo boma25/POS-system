@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import {Row, Col, Button} from 'react-bootstrap'
 import Navbar from '../componets/Navbar'
+import {useStoreContext} from "../util/store"
+import { Redirect } from "react-router-dom"
 
 
 
@@ -14,6 +16,12 @@ const data=[
 ]
 
 const Cashier = ()=>{
+
+    const {
+        isLoggedIn,
+    }=useStoreContext()
+    
+
     const [buy, setBuy]=useState( [
         {
             product:"",
@@ -43,7 +51,7 @@ const items=[
 ]
     const [product, setProduct]=useState("")
     const [quantity, setQuantity]=useState(1)
-    const [price, setPrice]=useState("0.00")
+    const [price, setPrice]=useState(0.00)
     const [isLoading, setIsLoading] = useState(false)
     const handleSubmit = (evt)=>{
         evt.preventDefault()
@@ -55,9 +63,9 @@ const items=[
             alert(e.message)
         }
     }
-    return(
+    return isLoggedIn ?(
         <div>
-            <Navbar name="Test"/>
+            <Navbar />
            <div className="container">
             <Row className="cashier-form">
                 <Col>
@@ -115,7 +123,10 @@ const items=[
             </Row>
            </div>
         </div>
-    )
+    ):(<div>
+        {alert("you must logged in")}
+        <Redirect to={"/"} />
+    </div>)
 }
 
 
