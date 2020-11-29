@@ -3,7 +3,7 @@
 import React, { useState } from "react"
 import { Redirect } from "react-router-dom"
 //import { Button } from "react-bootstrap"
-import {login} from "../Api/endpoint"
+import {login,  getDetails} from "../Api/endpoint"
 import {useStoreContext} from "../util/store"
 
 const Login = () => {
@@ -22,26 +22,30 @@ const Login = () => {
 			evt.preventDefault()
 			if(username==="" ||  password===""){
 				
-				alert("incorrect username or password")
+				alert("username or password cannot be empty")
 			}else{
 				setIsLoading(true)
-				const user = await login(username,password)
-				alert(user)
-				if(user==="login successful"){
+				const response = await login(username,password) 
+				alert(response)
+				if(response==="login successful"){
+					const details = await getDetails(username)
+					setName(`${details.firstName}  ${details.lastName}`)
+					const getTo = details.permission
+					if(getTo){
+						setTO("Admin")
+					}else{
+						setTO("Cashier")
+					}
 					setIsLoggedIn(true)
-					if(username==="Admin"){
-						setTO("admin")
-					}else(
-						setTO("cashier")
-					)
 				}
-				setName(username)
-				setIsLoading(false)
+			
+			setIsLoading(false)
 			}
 			
 
 		}catch(e){
 			alert(e)
+			setIsLoading(false)
 		}
 		
 	}

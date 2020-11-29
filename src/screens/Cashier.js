@@ -1,25 +1,27 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {Row, Col, Button} from 'react-bootstrap'
 import Navbar from '../componets/Navbar'
 import {useStoreContext} from "../util/store"
 import { Redirect } from "react-router-dom"
+import {get_stock} from "../Api/endpoint"
 
 
 
-const data=[
+ const data=[
     {
         product:"",
         price:"",
         quantity:""
     },
-    
-]
+ ]
 
 const Cashier = ()=>{
 
     const {
         isLoggedIn,
     }=useStoreContext()
+
+    
     
 
     const [buy, setBuy]=useState( [
@@ -31,38 +33,48 @@ const Cashier = ()=>{
         
 ])
 
-const items=[
-    {
-        name:"tissue",
-        price:"10"
-    },
-    {
-        name:"yam",
-        price:"500"
-    },
-    {
-        name:"paste",
-        price:"25",
-    },
-    {
-        name:"brush",
-        price:"15"
-    }
-]
+
     const [product, setProduct]=useState("")
     const [quantity, setQuantity]=useState(1)
-    const [price, setPrice]=useState(0.00)
+    const [price, setPrice]=useState("0.00")
     const [isLoading, setIsLoading] = useState(false)
+    const [items, setItems]=useState([""])
+
+
+    const get_inventory = async ()=>{
+        setItems(await get_stock())
+    }
+
     const handleSubmit = (evt)=>{
         evt.preventDefault()
-        product === ""? alert("please select a product"):
-        data.push({product:product,quantity:quantity,price:price})
-        try{
-            setBuy(data)
-        }catch (e){
-            alert(e.message)
+        if(product === ""|| product === "select a product"){
+            alert("please select a product")
+        }else{
+            data.push({product:product,quantity:quantity,price:price})
+            try{
+                setBuy(data)
+                alert("product added to cart")
+            }catch(e){
+                alert(e)
+            }
         }
     }
+
+    const priceFix =(e)=>{
+        setQuantity(e.target.value)
+
+        let i,x
+        for (i=0;i<items.length;i++){
+            if(items[i].name === product){
+                x = items[i].price * quantity
+                setPrice(`${x}.00`)
+            }
+        }
+    }
+
+    useEffect(()=>{
+        get_inventory()
+    },[])
     return isLoggedIn ?(
         <div>
             <Navbar />
@@ -72,7 +84,7 @@ const items=[
                 <form onSubmit={handleSubmit}>
             <div className="form-group">
                 <label >Product</label>
-                <select className="form-control" onChange={(e)=> [setProduct(e.target.value)]}>
+                <select className="form-control" onChange={(e)=> setProduct(e.target.value)}>
                     <option>select a product</option>
                     {items.map((value,index)=>(
                         <option key={index}>{value.name}</option>
@@ -81,13 +93,7 @@ const items=[
                 </select>
             </div>
             <label >Quantity</label>
-                <select className="form-control" onChange={(e)=> setQuantity(e.target.value)}>
-                    <option>{quantity}</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                </select>
+                <input className="form-control" onChange={(e)=> priceFix(e)}/>
             <div className="form-group">
                 <label >Price</label>
                 <input type="text" className="form-control" value={price} readOnly={true}/>
