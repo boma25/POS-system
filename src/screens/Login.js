@@ -31,6 +31,7 @@ const Login = () => {
 					alert(response)
 					if (response === "login successful") {
 						const details = await getDetails(username)
+						console.log(details)
 						setName(`${details.firstName}  ${details.lastName}`)
 						const getTo = details.permission
 						if (getTo) {

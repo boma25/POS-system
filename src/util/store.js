@@ -6,7 +6,7 @@ import { getLogin, getDetails } from "../Api/endpoint"
 const StoreContext = createContext(null)
 
 const StoreProvider = ({ children }) => {
-	const [isLoggedIn, setIsLoggedIn] = useState(true)
+	const [isLoggedIn, setIsLoggedIn] = useState(false)
 	const [name, setName] = useState("")
 	const [username, setUsername] = useState("")
 	const [to, setTO] = useState("")
