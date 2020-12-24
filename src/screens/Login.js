@@ -3,52 +3,48 @@
 import React, { useState } from "react"
 import { Redirect } from "react-router-dom"
 //import { Button } from "react-bootstrap"
-import {login,  getDetails} from "../Api/endpoint"
-import {useStoreContext} from "../util/store"
+import { login, getDetails, getLogin } from "../Api/endpoint"
+import { useStoreContext } from "../util/store"
 
 const Login = () => {
-	const {
-		isLoggedIn,
-		setIsLoggedIn,
-		setName
-	}=useStoreContext()
-
+	const { isLoggedIn, setIsLoggedIn, setName, to, setTO } = useStoreContext()
 	const [username, setUsername] = useState("")
 	const [password, setPassword] = useState("")
 	const [isLoading, setIsLoading] = useState(false)
-	const [to, setTO] = useState("")
-	const handleSubmit = async  (evt) => {
-		try{
-			evt.preventDefault()
-			if(username==="" ||  password===""){
-				
-				alert("username or password cannot be empty")
-			}else{
-				setIsLoading(true)
-				const response = await login(username,password) 
-				alert(response)
-				if(response==="login successful"){
-					const details = await getDetails(username)
-					setName(`${details.firstName}  ${details.lastName}`)
-					const getTo = details.permission
-					if(getTo){
-						setTO("Admin")
-					}else{
-						setTO("Cashier")
-					}
-					setIsLoggedIn(true)
-				}
-			
-			setIsLoading(false)
-			}
-			
 
-		}catch(e){
+	const handleSubmit = async (evt) => {
+		try {
+			evt.preventDefault()
+			if (username === "" || password === "") {
+				alert("username or password cannot be empty")
+			} else {
+				setIsLoading(true)
+				try {
+					const response = await login(username, password)
+					alert(response)
+					if (response === "login successful") {
+						const details = await getDetails(username)
+						setName(`${details.firstName}  ${details.lastName}`)
+						const getTo = details.permission
+						if (getTo) {
+							setTO("Admin")
+						} else {
+							setTO("Cashier")
+						}
+					}
+					setIsLoggedIn(await getLogin())
+				} catch (e) {
+					alert(e)
+				}
+
+				setIsLoading(false)
+			}
+		} catch (e) {
 			alert(e)
 			setIsLoading(false)
 		}
-		
 	}
+
 	return isLoggedIn ? (
 		<Redirect to={to} />
 	) : (
@@ -75,8 +71,8 @@ const Login = () => {
 						/>
 						<p />
 						{isLoading ? (
-							<div class="spinner-border login-form-spinner " role="status">
-								<span class="sr-only">Loading...</span>
+							<div className="spinner-border login-form-spinner " role="status">
+								<span className="sr-only">Loading...</span>
 							</div>
 						) : (
 							<input
