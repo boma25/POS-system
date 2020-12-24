@@ -11,13 +11,20 @@ const Navbar = (Props) => {
 		<div>
 			<nav className="navbar navbar-expand-lg navbar-dark bg-dark">
 				<h1 className="navbar-brand">POS SYSTEM</h1>
-				<div className="collapse navbar-collapse" id="navbarSupportedContent">
+				<div className="collapse navbar-collapse" id="navbarNavDropdown">
 					<ul className="navbar-nav group-nav">
 						<li className="nav-item nav-link">{name}</li>
-						<li className="nav-item">
-							<a href="#" className="nav-link">
-								My Account
-							</a>
+						<li>
+							<div className="dropdown">
+								<button className="dropbtn nav-item nav-link">
+									My Account
+								</button>
+								<div className="dropdown-content bg-dark">
+									<Link to={"/reset"} className="nav-item nav-link">
+										Change Password
+									</Link>
+								</div>
+							</div>
 						</li>
 						<li className="nav-item">
 							<Link

@@ -2,44 +2,34 @@
 
 import React, { useState } from "react"
 import { Redirect } from "react-router-dom"
-//import { Button } from "react-bootstrap"
-import { login, getDetails, getLogin } from "../Api/endpoint"
+import { reset } from "../Api/endpoint"
 import { useStoreContext } from "../util/store"
 
 const Login = () => {
-	const {
-		isLoggedIn,
-		setIsLoggedIn,
-		setName,
-		to,
-		setTO,
-		setUsername,
-		username,
-	} = useStoreContext()
+	const { isLoggedIn, to, username } = useStoreContext()
 	const [password, setPassword] = useState("")
+	const [newPassword, setNewPassword] = useState("")
+	const [confPassword, setConfPassword] = useState("")
 	const [isLoading, setIsLoading] = useState(false)
+	const [resetDone, setResetDone] = useState(false)
 
 	const handleSubmit = async (evt) => {
 		try {
 			evt.preventDefault()
-			if (username === "" || password === "") {
-				alert("username or password cannot be empty")
+			if (password === "" || newPassword === "" || confPassword === "") {
+				alert("fields cannot be empty")
+			} else if (newPassword === password) {
+				alert("new password cannot be equal to old password")
+			} else if (newPassword !== confPassword) {
+				alert("passwords do not match")
 			} else {
 				setIsLoading(true)
 				try {
-					const response = await login(username, password)
+					const response = await reset(username, password, newPassword)
 					alert(response)
-					if (response === "login successful") {
-						const details = await getDetails(username)
-						setName(`${details.firstName}  ${details.lastName}`)
-						const getTo = details.permission
-						if (getTo) {
-							setTO("Admin")
-						} else {
-							setTO("Cashier")
-						}
+					if (response === "password successfully updated") {
+						setResetDone(true)
 					}
-					setIsLoggedIn(await getLogin())
 				} catch (e) {
 					alert(e)
 				}
@@ -52,7 +42,9 @@ const Login = () => {
 		}
 	}
 
-	return isLoggedIn ? (
+	return !isLoggedIn ? (
+		<Redirect to={"/"} />
+	) : resetDone ? (
 		<Redirect to={to} />
 	) : (
 		<div className="container">
@@ -60,21 +52,28 @@ const Login = () => {
 				<div className="login-form">
 					<div className="login-form-header">
 						<h1 className="login-title">POS SYSTEM</h1>
-						<h2 className="login-sub-title"> LOGIN</h2>
+						<h2 className="reset-sub-title"> Password reset</h2>
 					</div>
 					<form onSubmit={handleSubmit}>
-						<input
-							type="text"
-							placeholder="Username"
-							className="login-input"
-							onChange={(e) => setUsername(e.target.value)}
-						/>
-						<p />
 						<input
 							type="password"
 							placeholder="Password"
 							className="login-input"
 							onChange={(e) => setPassword(e.target.value)}
+						/>
+						<p />
+						<input
+							type="password"
+							placeholder="NewPassword"
+							className="login-input"
+							onChange={(e) => setNewPassword(e.target.value)}
+						/>
+						<p />
+						<input
+							type="password"
+							placeholder="Confirm password"
+							className="login-input"
+							onChange={(e) => setConfPassword(e.target.value)}
 						/>
 						<p />
 						{isLoading ? (
@@ -84,7 +83,7 @@ const Login = () => {
 						) : (
 							<input
 								type="submit"
-								value="Login"
+								value="Reset"
 								className="login-form-bottom"
 							/>
 						)}

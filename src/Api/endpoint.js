@@ -26,6 +26,14 @@ export const Logout = async () => {
 	let response = await api.get(`/auth/logout`)
 	return response.data
 }
+export const reset = async (username, password, newPassword) => {
+	let response = await api.post(`/auth/reset`, {
+		username,
+		password,
+		newPassword,
+	})
+	return response.data
+}
 
 // user routes
 export const get_employees = async () => {

@@ -14,6 +14,8 @@ import { Redirect } from "react-router-dom"
 
 import Inventory from "../componets/Inventory"
 import Employee from "../componets/Employee"
+import AddEmployee from "../componets/AddEmployee"
+import RemoveEmployee from "../componets/RemoveEmployee"
 
 const Admin = (Props) => {
 	const [page, setPage] = useState("stock")
@@ -33,13 +35,13 @@ const Admin = (Props) => {
 						<div className="aside-inner bg-dark navbar-dark">
 							<ul>
 								<li className="nav-link aside-list">
-									<FaRegSquare className="aside-btn" />
+									<FaWarehouse className="aside-btn" />
 									<a
 										href="#"
-										onClick={() => setPage("dashboard")}
+										onClick={() => setPage("stock")}
 										className="aside-btn"
 									>
-										DashBoard
+										Stock
 									</a>
 								</li>
 								<li className="nav-link aside-list">
@@ -53,23 +55,23 @@ const Admin = (Props) => {
 									</a>
 								</li>
 								<li className="nav-link aside-list">
-									<FaWarehouse className="aside-btn" />
+									<FaRegUser className="aside-btn" />
 									<a
 										href="#"
-										onClick={() => setPage("stock")}
+										onClick={() => setPage("Add")}
 										className="aside-btn"
 									>
-										Stock
+										Add Employee
 									</a>
 								</li>
 								<li className="nav-link aside-list">
-									<FaRegListAlt className="aside-btn" />
+									<FaRegUser className="aside-btn" />
 									<a
 										href="#"
-										onClick={() => setPage("report")}
+										onClick={() => setPage("Remove")}
 										className="aside-btn"
 									>
-										Report
+										Remove Employee
 									</a>
 								</li>
 							</ul>
@@ -77,16 +79,14 @@ const Admin = (Props) => {
 					</Col>
 					<Col className="inner-space">
 						<Container>
-							{page === "dashboard" ? (
-								<div>Dashboard</div>
-							) : page === "employee" ? (
+							{page === "employee" ? (
 								<Employee />
-							) : page === "stock" ? (
-								<Inventory />
-							) : page === "report" ? (
-								<div>report</div>
+							) : page === "Remove" ? (
+								<RemoveEmployee />
+							) : page === "Add" ? (
+								<AddEmployee />
 							) : (
-								<div>customer</div>
+								<Inventory />
 							)}
 						</Container>
 					</Col>
@@ -94,11 +94,13 @@ const Admin = (Props) => {
 			</div>
 		)
 	}
-	const initial = () => {
-		return isLoading ? <div></div> : <Admin />
-	}
+
 	return isLoggedIn ? (
-		initial
+		isLoading ? (
+			<div></div>
+		) : (
+			<Admin />
+		)
 	) : (
 		<div>
 			{alert("you must logged in")}

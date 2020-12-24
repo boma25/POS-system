@@ -8,6 +8,7 @@ const StoreContext = createContext(null)
 const StoreProvider = ({ children }) => {
 	const [isLoggedIn, setIsLoggedIn] = useState(true)
 	const [name, setName] = useState("")
+	const [username, setUsername] = useState("")
 	const [to, setTO] = useState("")
 	const loggincheck = async () => {
 		let response = await getLogin()
@@ -15,6 +16,7 @@ const StoreProvider = ({ children }) => {
 			setIsLoggedIn(response.isLoggedin)
 			const details = await getDetails(response.username)
 			setName(`${details.firstName}  ${details.lastName}`)
+			setUsername(details.username)
 			const getTo = details.permission
 			if (getTo) {
 				setTO("Admin")
@@ -31,7 +33,16 @@ const StoreProvider = ({ children }) => {
 
 	return (
 		<StoreContext.Provider
-			value={{ isLoggedIn, setIsLoggedIn, name, setName, to, setTO }}
+			value={{
+				isLoggedIn,
+				setIsLoggedIn,
+				name,
+				setName,
+				to,
+				setTO,
+				username,
+				setUsername,
+			}}
 		>
 			{children}
 		</StoreContext.Provider>
